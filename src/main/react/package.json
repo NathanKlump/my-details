@@ -1,0 +1,47 @@
+{
+  "name": "stuff",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:8090/",
+  "dependencies": {
+    "@material-ui/core": "^4.11.1",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/styles": "^4.11.4",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "classnames": "^2.3.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "rewire": "^6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "node scripts/build-non-split.js && npm run build:clean",
+    "build:clean": "cd build/static/js/ && cp main.*.js main.js && cp main.*.map main.js.map",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "format": "npx prettier --write \"src/**/*.js\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true
+  }
+}

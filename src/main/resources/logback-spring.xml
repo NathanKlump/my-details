@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <appender name="FRAMEWORK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${LOG_FILE}Framework.log</file>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE}Framework.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{"yyyy-MM-dd HH:mm:ss"} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${LOG_FILE}Application.log</file>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE}Application.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{"yyyy-MM-dd HH:mm:ss"} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${LOG_FILE}Access.log</file>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE}Access.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{"yyyy-MM-dd HH:mm:ss"} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="SPLUNK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${LOG_FILE}Splunk.log</file>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE}Splunk.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{"yyyy-MM-dd HH:mm:ss"},%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{"yyyy-MM-dd HH:mm:ss"} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="FRAMEWORK" level="INFO" additivity="false">
+    <appender-ref ref="FRAMEWORK" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <logger name="APPLICATION" level="INFO" additivity="false">
+    <appender-ref ref="APPLICATION" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <logger name="ACCESS" level="INFO" additivity="false">
+    <appender-ref ref="ACCESS" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <logger name="SPLUNK" level="INFO" additivity="false">
+    <appender-ref ref="SPLUNK" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="FRAMEWORK" />
+    <appender-ref ref="CONSOLE" />
+  </root>
+
+</configuration>

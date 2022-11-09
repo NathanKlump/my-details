@@ -1,0 +1,123 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+  id 'java'
+  id 'maven-publish'
+  id 'org.springframework.boot' version '2.6.3'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
+  id 'com.diffplug.spotless' version '6.2.1'
+  id 'com.github.node-gradle.node' version '3.2.0'
+  id 'org.owasp.dependencycheck' version '6.5.3'
+}
+
+jar {
+  enabled = false
+}
+
+group = 'edu.oakland'
+version = '1.2.8'
+description = 'My Details Soffit as stand-alone Spring Boot app'
+
+repositories {
+  maven {
+    url "https://maven.oakland.edu/repository/public"
+    name "nexus"
+    credentials {
+      username "$mavenUser"
+      password "$mavenPassword"
+    }
+  }
+  mavenLocal()
+  mavenCentral()
+}
+
+if (project.hasProperty('local')) {
+  apply from: rootProject.file('gradle/profile_local.gradle');
+  println 'Using profile: "local"'
+} else {
+  println 'Using profile: "default"'
+}
+
+node {
+  // Version of node to use.
+  version = '10.14.2'
+  // Base URL for fetching node distributions (change if you have a mirror).
+  distBaseUrl = 'https://nodejs.org/dist'
+  // If true, it will download node using above parameters.
+  // If false, it will try to use globally installed node.
+  download = true
+  // Set the work directory for unpacking node
+  workDir = file("${project.buildDir}/nodejs")
+  // Set the work directory where node_modules should be located
+
+  // Set the work directory for Yarn
+  npmWorkDir = file("${project.buildDir}/npm")
+
+  nodeModulesDir = file("src/main/react")
+}
+
+task runBuild(type: NpmTask) {
+  args = ['run', 'build']
+}
+
+task copyTask(type: Copy) {
+  from 'src/main/react/build/static/'
+  into 'src/main/resources/static'
+}
+
+test {
+  testLogging {
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+  }
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+spotless {
+  java {
+    googleJavaFormat()
+    importOrder "edu", "java", "com org", ""
+    removeUnusedImports()
+    trimTrailingWhitespace()
+  }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+  runtimeOnly 'com.oracle:ojdbc8:12.2.0.1.0'
+
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springframework.security:spring-security-cas'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation "org.springframework.security:spring-security-ldap"
+  implementation 'com.google.code.gson:gson:2.8.2'
+
+  implementation 'org.jasypt:jasypt:1.9.3'
+  implementation 'com.auth0:java-jwt:3.4.1'
+
+  implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+  implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+clean.finalizedBy 'npm_install'
+npm_install.finalizedBy 'runBuild'
+runBuild.finalizedBy 'copyTask'
+copyTask.finalizedBy 'spotlessApply'
