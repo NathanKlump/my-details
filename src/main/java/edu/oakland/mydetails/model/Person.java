@@ -16,7 +16,7 @@ public class Person {
 
   public Person(LdapUserModel ldapUserModel, String preferredName) {
     pidm = Integer.toString(ldapUserModel.pidm);
-    legalName = ldapUserModel.firstName;
+    legalName = ldapUserModel.legalName;
     prefName = preferredName == null ? ldapUserModel.firstName : preferredName;
     gid = ldapUserModel.gId;
     email = ldapUserModel.netId + "@oakland.edu";
@@ -26,7 +26,7 @@ public class Person {
 
   public Person(JwtJsonModel jwtJsonModel) {
     pidm = jwtJsonModel.pidm;
-    legalName = jwtJsonModel.givenName;
+    legalName = jwtJsonModel.cn;
     prefName =
         jwtJsonModel.preferredName == null ? jwtJsonModel.givenName : jwtJsonModel.preferredName;
     gid = jwtJsonModel.gid;

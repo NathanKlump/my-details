@@ -17,6 +17,7 @@ public class LdapAttributesToPojoConverter implements AttributesMapper<LdapUserM
 
   public LdapUserModel mapFromAttributes(Attributes attributes) throws NamingException {
     LdapUserModel ldapUserModel = new LdapUserModel();
+    setLegalName(attributes, ldapUserModel);
     setFirstName(attributes, ldapUserModel);
     setLastName(attributes, ldapUserModel);
     setGId(attributes, ldapUserModel);
@@ -29,6 +30,14 @@ public class LdapAttributesToPojoConverter implements AttributesMapper<LdapUserM
     setPrimaryAffiliation(attributes, ldapUserModel);
     setAffiliation(attributes, ldapUserModel);
     return ldapUserModel;
+  }
+
+  private void setLegalName(Attributes attributes, LdapUserModel ldapUserModel)
+      throws NamingException {
+    Attribute attribute = (Attribute) attributes.get("cn");
+    if (attribute != null) {
+      ldapUserModel.legalName = (String) attribute.get();
+    }
   }
 
   private void setFirstName(Attributes attributes, LdapUserModel ldapUserModel)

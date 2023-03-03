@@ -7,6 +7,8 @@ import javax.validation.constraints.Size;
 import com.google.gson.Gson;
 
 public class LdapUserModel {
+  public String legalName;
+
   @Size(min = 2, max = 60)
   public String firstName;
 

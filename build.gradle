@@ -16,7 +16,7 @@ jar {
 }
 
 group = 'edu.oakland'
-version = '1.2.8'
+version = '1.2.11'
 description = 'My Details Soffit as stand-alone Spring Boot app'
 
 repositories {

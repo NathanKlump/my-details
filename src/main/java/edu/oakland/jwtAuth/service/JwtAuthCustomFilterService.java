@@ -12,17 +12,19 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 import org.springframework.web.filter.GenericFilterBean;
 
 public class JwtAuthCustomFilterService extends GenericFilterBean {
-  private JwtAuthService jwtAuthService;
-  private JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService;
+  private final JwtAuthService jwtAuthService;
+  private final ParseJwtJsonModelService parseJwtJsonModelService;
+  private final JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService;
 
   public JwtAuthCustomFilterService(
       JwtAuthService jwtAuthService,
+      ParseJwtJsonModelService parseJwtJsonModelService,
       JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService) {
     this.jwtAuthService = jwtAuthService;
+    this.parseJwtJsonModelService = parseJwtJsonModelService;
     this.jwtAuthBannerGetPreferredNameService = jwtAuthBannerGetPreferredNameService;
   }
 
@@ -64,7 +66,7 @@ public class JwtAuthCustomFilterService extends GenericFilterBean {
   private JwtJsonModel getJwtJsonModelFromEncryptedJwtToken(String encryptedJwtToken)
       throws IOException {
     String jsonPayloadString = getJsonPayloadStringFromEncryptedJwtToken(encryptedJwtToken);
-    return new Gson().fromJson(jsonPayloadString, JwtJsonModel.class);
+    return parseJwtJsonModelService.parseJwtJsonModelService(jsonPayloadString);
   }
 
   private String getPreferredNameFromBanner(int pidm) throws IOException {

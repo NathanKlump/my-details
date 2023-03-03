@@ -12,11 +12,11 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RetrieveUserInfoFromNetIdDao {
+public class LdapGetUserInfoFromNetIdDao {
   private final LdapTemplate ldapTemplate;
 
   @Autowired
-  public RetrieveUserInfoFromNetIdDao(
+  public LdapGetUserInfoFromNetIdDao(
       @Qualifier(value = "cas-auth.ldap-query-auth.ldap-template") LdapTemplate ldapTemplate) {
     this.ldapTemplate = ldapTemplate;
   }
@@ -38,6 +38,7 @@ public class RetrieveUserInfoFromNetIdDao {
           "ouEduPersonUUID",
           "givenName",
           "sn",
+          "cn",
           "ouEduPersonBannerGID",
           "uid",
           "edupersonprimaryaffiliation",

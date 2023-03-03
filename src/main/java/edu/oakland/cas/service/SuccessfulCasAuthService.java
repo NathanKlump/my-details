@@ -1,6 +1,6 @@
 package edu.oakland.cas.service;
 
-import edu.oakland.cas.dao.RetrieveUserInfoFromNetIdDao;
+import edu.oakland.cas.dao.LdapGetUserInfoFromNetIdDao;
 import edu.oakland.cas.exception.BannerGetPreferredNameServiceException;
 import edu.oakland.cas.model.LdapUserModel;
 import edu.oakland.cas.model.SessionDataModel;
@@ -22,14 +22,14 @@ import org.springframework.web.servlet.ModelAndViewDefiningException;
 
 @Service
 public class SuccessfulCasAuthService {
-  private final RetrieveUserInfoFromNetIdDao retrieveUserInfoFromNetIdDao;
+  private final LdapGetUserInfoFromNetIdDao ldapGetUserInfoFromNetIdDao;
   private final BannerGetPreferredNameService bannerGetPreferredNameService;
 
   @Autowired
   public SuccessfulCasAuthService(
-      RetrieveUserInfoFromNetIdDao retrieveUserInfoFromNetIdDao,
+      LdapGetUserInfoFromNetIdDao ldapGetUserInfoFromNetIdDao,
       BannerGetPreferredNameService bannerGetPreferredNameService) {
-    this.retrieveUserInfoFromNetIdDao = retrieveUserInfoFromNetIdDao;
+    this.ldapGetUserInfoFromNetIdDao = ldapGetUserInfoFromNetIdDao;
     this.bannerGetPreferredNameService = bannerGetPreferredNameService;
   }
 
@@ -65,7 +65,7 @@ public class SuccessfulCasAuthService {
   private LdapUserModel callDaoToGetLdapUserModel(String netId, HttpSession httpSession)
       throws ServletException {
     List<LdapUserModel> ldapUserModelList =
-        retrieveUserInfoFromNetIdDao.getLdapUserInfoFromNetId(netId);
+        ldapGetUserInfoFromNetIdDao.getLdapUserInfoFromNetId(netId);
     if (ldapUserModelList == null || ldapUserModelList.size() != 1) {
       throwModelAndViewExceptionWhenErrorOccurs(httpSession);
     }

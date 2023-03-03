@@ -5,6 +5,7 @@ import edu.oakland.cas.pojo.CustomCasAuthenticationEntryPoint;
 import edu.oakland.jwtAuth.service.JwtAuthBannerGetPreferredNameService;
 import edu.oakland.jwtAuth.service.JwtAuthCustomFilterService;
 import edu.oakland.jwtAuth.service.JwtAuthService;
+import edu.oakland.jwtAuth.service.ParseJwtJsonModelService;
 
 import java.util.Arrays;
 
@@ -37,8 +38,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class CustomCasWebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final CustomCasAuthenticationSuccessHandler customCasAuthenticationSuccessHandler;
   private final CasConfig casConfig;
-  private JwtAuthService jwtAuthService;
-  private JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService;
+  private final JwtAuthService jwtAuthService;
+  private final ParseJwtJsonModelService parseJwtJsonModelService;
+  private final JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService;
   private String oaklandJwtAuthCorsAllowedUrl;
 
   @Autowired
@@ -46,11 +48,13 @@ public class CustomCasWebSecurityConfig extends WebSecurityConfigurerAdapter {
       CustomCasAuthenticationSuccessHandler customCasAuthenticationSuccessHandler,
       CasConfig casConfig,
       JwtAuthService jwtAuthService,
+      ParseJwtJsonModelService parseJwtJsonModelService,
       JwtAuthBannerGetPreferredNameService jwtAuthBannerGetPreferredNameService,
       @Value("${oakland.jwt-auth.cors-allowed-url}") String oaklandJwtAuthCorsAllowedUrl) {
     this.customCasAuthenticationSuccessHandler = customCasAuthenticationSuccessHandler;
     this.casConfig = casConfig;
     this.jwtAuthService = jwtAuthService;
+    this.parseJwtJsonModelService = parseJwtJsonModelService;
     this.jwtAuthBannerGetPreferredNameService = jwtAuthBannerGetPreferredNameService;
     this.oaklandJwtAuthCorsAllowedUrl = oaklandJwtAuthCorsAllowedUrl;
   }
@@ -75,7 +79,8 @@ public class CustomCasWebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticationEntryPoint(casAuthenticationEntryPoint(serviceProperties()))
         .and()
         .addFilterBefore(
-            new JwtAuthCustomFilterService(jwtAuthService, jwtAuthBannerGetPreferredNameService),
+            new JwtAuthCustomFilterService(
+                jwtAuthService, parseJwtJsonModelService, jwtAuthBannerGetPreferredNameService),
             BasicAuthenticationFilter.class);
   }
 
